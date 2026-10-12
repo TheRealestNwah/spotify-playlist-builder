@@ -7,7 +7,7 @@ server (`spotify-playlist-mcp`) so Claude can call it as a connector.
 - Install: `pip install -e ".[dev]"`
 - Test: `pytest`
 - Lint: `ruff check .`
-- CLI: `spotify-playlist login`, then `spotify-playlist build tracks/skate1.txt --name "Skate 1" [--dry-run]`
+- CLI: `spotify-playlist setup` (saves Client ID), `spotify-playlist login`, then `spotify-playlist build tracks/skate1.txt --name "Skate 1" [--dry-run]`
 
 ## Layout
 - `src/spotify_playlist_builder/auth.py`: PKCE browser login; token cached in `~/.spotify-playlist-builder/token.json`
@@ -17,7 +17,8 @@ server (`spotify-playlist-mcp`) so Claude can call it as a connector.
 - `tracks/`: track list files
 
 ## Gotchas
-- Needs `SPOTIFY_CLIENT_ID` env var; the Spotify app must list `http://127.0.0.1:8888/callback` as a redirect URI.
+- Client ID comes from `SPOTIFY_CLIENT_ID` or `~/.spotify-playlist-builder/config.json` (written by `setup`).
+  Every user makes their own Spotify app (dev mode: 5 users, owner needs Premium). The app must list `http://127.0.0.1:8888/callback` as a redirect URI.
 - Uses post-Feb-2026 endpoints: `POST /me/playlists`, `POST /playlists/{id}/items`; search `limit` max is 10.
 - Spotify dev-mode apps may require a Premium account; unverified here.
 - Matching requires the artist to match and title similarity >= 0.6; unmatched tracks are reported, never guessed.
