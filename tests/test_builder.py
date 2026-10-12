@@ -77,3 +77,23 @@ def test_dry_run_creates_nothing():
     c = FakeClient([("Black Flag", "Six Pack", "spotify:track:4")])
     build_playlist(c, [Entry("Black Flag", "Six Pack")], "Skate", dry_run=True)
     assert c.created is None
+
+
+def test_accent_folding():
+    c = FakeClient([("Motörhead", "We Are Motörhead", "spotify:track:5")])
+    assert find_track(c, Entry("Motorhead", "We Are Motorhead")).uri == "spotify:track:5"
+
+
+def test_artist_spelling_variant():
+    c = FakeClient([("Airbourne", "Let's Ride", "spotify:track:6")])
+    assert find_track(c, Entry("Airborne", "Let's Ride")).uri == "spotify:track:6"
+
+
+def test_demo_version_loses_to_original():
+    c = FakeClient(
+        [
+            ("David Bowie", "Queen Bitch - Demo", "spotify:track:demo"),
+            ("David Bowie", "Queen Bitch - 2015 Remaster", "spotify:track:orig"),
+        ]
+    )
+    assert find_track(c, Entry("David Bowie", "Queen Bitch")).uri == "spotify:track:orig"

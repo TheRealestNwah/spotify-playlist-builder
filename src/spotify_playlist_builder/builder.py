@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 
@@ -56,17 +57,29 @@ def parse_tracks(lines: list[str]) -> list[Entry]:
     return entries
 
 
+_ALT_VERSION = re.compile(
+    r"(?<![a-z])(demo|live|remix|karaoke|instrumental|acoustic|cover|tribute)(?![a-z])", re.IGNORECASE
+)
+
+
 def _norm(s: str) -> str:
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(c for c in s if not unicodedata.combining(c))  # Motörhead -> Motorhead
     s = s.lower()
     s = re.sub(r"\(.*?\)|\[.*?\]", " ", s)  # drop "(Remastered)" style suffixes
     s = re.sub(r"\bthe\b", " ", s)
     return re.sub(r"[^a-z0-9]", "", s)
 
 
+def _artist_matches(want: str, got: str) -> bool:
+    # Substring match, or near-identical spelling (e.g. "Airborne" vs "Airbourne").
+    return want in got or got in want or SequenceMatcher(None, want, got).ratio() >= 0.88
+
+
 def _score(entry: Entry, track: dict) -> float:
     want_artist = _norm(entry.artist)
     artists = [_norm(a["name"]) for a in track.get("artists", [])]
-    if not any(want_artist in a or a in want_artist for a in artists if a):
+    if not any(_artist_matches(want_artist, a) for a in artists if a):
         return 0.0
     title = _norm(entry.title)
     got = _norm(track["name"])
@@ -74,6 +87,9 @@ def _score(entry: Entry, track: dict) -> float:
     # Titles like "Gut Feeling/Slap Your Mammy" may match on either half.
     for half in re.split(r"[/]", entry.title):
         score = max(score, SequenceMatcher(None, _norm(half), got).ratio())
+    # Prefer the original recording over demos/live/remixes unless the entry asks for one.
+    if _ALT_VERSION.search(track["name"]) and not _ALT_VERSION.search(entry.title):
+        score -= 0.3
     return score
 
 
