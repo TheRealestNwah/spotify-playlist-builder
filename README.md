@@ -6,6 +6,10 @@
 Turn a plain text list of songs into a Spotify playlist. You give it `Artist – Title` lines; it finds each
 song on Spotify and builds a private playlist in your own account, in order.
 
+> **Built with AI.** This project's code, tests and documentation were written by
+> Claude, an AI model from Anthropic, directed and tested by the maintainer.
+> See [AI disclosure](#ai-disclosure).
+
 It works two ways:
 
 - **Command line:** `spotify-playlist build my-songs.txt --name "My Playlist"`
@@ -126,4 +130,24 @@ pytest
 ruff check .
 ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under the [MIT License](LICENSE). Not affiliated with Spotify.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Not affiliated with Spotify.
+
+## AI disclosure
+
+This project was built with [Claude Code](https://claude.com/claude-code), Anthropic's
+AI coding assistant. Claude wrote the code, tests and documentation. The
+maintainer ([@TheRealestNwah](https://github.com/TheRealestNwah)) decided what
+it should do, tested it, and made the release decisions. Commits written with
+Claude carry a `Co-Authored-By: Claude` trailer, so the git history shows which
+changes were AI-written.
+
+## Support
+
+Everything on my GitHub is free of charge and open source. If you find it
+useful and want to leave a tip or buy me a coffee, you can do that at
+[ko-fi.com/morrowheat23](https://ko-fi.com/morrowheat23). It's appreciated,
+never expected.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
