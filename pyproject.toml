@@ -1,6 +1,6 @@
 [project]
 name = "spotify-playlist-builder"
-version = "0.1.0"
+version = "1.0.0"
 description = "Build Spotify playlists from an exact list of tracks (CLI + MCP connector)"
 readme = "README.md"
 license = "MIT"
