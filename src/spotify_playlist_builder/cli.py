@@ -1,4 +1,4 @@
-"""Command line interface: `spotify-playlist login | build`."""
+"""Command line interface: `spotify-playlist setup | login | build`."""
 
 from __future__ import annotations
 
@@ -16,6 +16,8 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.reconfigure(encoding="utf-8")
     p = argparse.ArgumentParser(prog="spotify-playlist")
     sub = p.add_subparsers(dest="cmd", required=True)
+    st = sub.add_parser("setup", help="Save your Spotify app's Client ID (one time)")
+    st.add_argument("--client-id", help="Client ID (prompted for if omitted)")
     sub.add_parser("login", help="Log in to Spotify in your browser (one time)")
     b = sub.add_parser("build", help="Create a playlist from a track list file")
     b.add_argument("file", type=Path, help="Text file with one 'Artist – Title' per line")
@@ -26,6 +28,14 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     try:
+        if args.cmd == "setup":
+            if not args.client_id:
+                print("Create an app at https://developer.spotify.com/dashboard and add this redirect URI:")
+                print(f"  {auth.REDIRECT_URI}")
+                print("Then paste the app's Client ID.")
+            auth.save_client_id(args.client_id or input("Client ID: "))
+            print("Saved. Now run: spotify-playlist login")
+            return 0
         if args.cmd == "login":
             auth.login()
             print("Logged in.")

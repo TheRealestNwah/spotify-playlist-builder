@@ -2,8 +2,22 @@
 name = "spotify-playlist-builder"
 version = "0.1.0"
 description = "Build Spotify playlists from an exact list of tracks (CLI + MCP connector)"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "TheRealestNwah" }]
+keywords = ["spotify", "playlist", "mcp", "claude"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Environment :: Console",
+  "Topic :: Multimedia :: Sound/Audio",
+]
 requires-python = ">=3.10"
 dependencies = ["mcp>=1.2,<2"]
+
+[project.urls]
+Homepage = "https://github.com/TheRealestNwah/spotify-playlist-builder"
+Issues = "https://github.com/TheRealestNwah/spotify-playlist-builder/issues"
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "ruff>=0.6"]
@@ -13,7 +27,7 @@ spotify-playlist = "spotify_playlist_builder.cli:main"
 spotify-playlist-mcp = "spotify_playlist_builder.mcp_server:main"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]

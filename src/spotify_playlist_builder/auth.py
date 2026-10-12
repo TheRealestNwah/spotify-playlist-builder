@@ -22,19 +22,35 @@ REDIRECT_HOST = "127.0.0.1"
 REDIRECT_PORT = 8888
 REDIRECT_URI = f"http://{REDIRECT_HOST}:{REDIRECT_PORT}/callback"
 SCOPES = "playlist-modify-private playlist-modify-public"
-TOKEN_PATH = Path.home() / ".spotify-playlist-builder" / "token.json"
+CONFIG_DIR = Path.home() / ".spotify-playlist-builder"
+TOKEN_PATH = CONFIG_DIR / "token.json"
+CONFIG_PATH = CONFIG_DIR / "config.json"
 
 
 class AuthError(RuntimeError):
     pass
 
 
+def save_client_id(client_id: str) -> None:
+    client_id = client_id.strip()
+    if not client_id:
+        raise AuthError("Client ID is empty.")
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIG_PATH.write_text(json.dumps({"client_id": client_id}))
+
+
 def get_client_id() -> str:
+    """Client ID from SPOTIFY_CLIENT_ID, else from the file written by `spotify-playlist setup`."""
     client_id = os.environ.get("SPOTIFY_CLIENT_ID", "").strip()
     if not client_id:
+        try:
+            client_id = json.loads(CONFIG_PATH.read_text()).get("client_id", "").strip()
+        except (OSError, ValueError):
+            client_id = ""
+    if not client_id:
         raise AuthError(
-            "Set SPOTIFY_CLIENT_ID to your Spotify app's Client ID "
-            f"(and add {REDIRECT_URI} as a redirect URI in the app settings)."
+            "No Spotify Client ID configured. Run `spotify-playlist setup` "
+            "(see the README for how to create a Spotify app)."
         )
     return client_id
 
