@@ -6,5 +6,9 @@ __pycache__/
 build/
 dist/
 
+# Personal track lists (tracks/skate1.txt is the committed example)
+tracks/skate2.txt
+tracks/skate3.txt
+
 # Private agent notes (CLAUDE.md is shared)
 CLAUDE.local.md
