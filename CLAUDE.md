@@ -22,3 +22,17 @@ server (`spotify-playlist-mcp`) so Claude can call it as a connector.
 - Uses post-Feb-2026 endpoints: `POST /me/playlists`, `POST /playlists/{id}/items`; search `limit` max is 10.
 - Spotify dev-mode apps may require a Premium account; unverified here.
 - Matching requires the artist to match and title similarity >= 0.6; unmatched tracks are reported, never guessed.
+
+## Agent skills
+
+### Issue tracker
+
+Issues live in this repo's GitHub Issues, managed with the `gh` CLI. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
